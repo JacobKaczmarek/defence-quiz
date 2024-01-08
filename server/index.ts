@@ -1,7 +1,9 @@
+import { quizRouter } from "./quiz";
 import { publicProcedure, router } from "./trpc";
 import { faker } from '@faker-js/faker';
 
 export const appRouter = router({
+    quiz: quizRouter,
     getLeaderboard: publicProcedure.query(async () => {
         const results = []
 
