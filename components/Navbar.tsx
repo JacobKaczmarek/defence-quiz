@@ -1,9 +1,10 @@
 import Link from "next/link"
 import { ModeToggle } from "./ModeToggle"
 import { Button } from "./ui/button"
-import { User } from "lucide-react"
+import { Book, User } from "lucide-react"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
 
 export async function Navbar() {
   const session = await getServerSession(authOptions);
@@ -11,25 +12,36 @@ export async function Navbar() {
   return (
     <div className="w-full flex justify-between py-3 mt-2">
       <Link href='/'>
-          <Button variant="ghost" className="text-lg font-semibold">
-            Akademia Savage
-          </Button>
+        <Button variant="ghost" className="text-lg font-semibold">
+          Akademia Savage
+        </Button>
       </Link>
-      
-      
-      <div className="flex gap-1">
-      <ModeToggle />
-      { session?.user ? (
-        <div className="ml-2 flex items-center">
-          <span>{session.user.name}</span>
-          {/* <Image src={session.user.image as string} width={50} height={50} alt="Profile picture" /> */}
-        </div>
-      ) : (
-        <Button variant="ghost"><User /></Button>
-        )
-      }
-      </div>
 
+
+      <div className="flex gap-1">
+        <Link href='/quiz/list'><Button variant="ghost">Quizy <Book className="ml-2"/></Button></Link>
+        <ModeToggle />
+        {session?.user ? (
+          <div className="ml-2 flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost">
+                  {session.user.name}
+                  <User className="ml-2"/>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/api/auth/signout">Wyloguj</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : (
+          <Button variant="ghost"><User /></Button>
+        )
+        }
+      </div>
     </div>
   )
 }
