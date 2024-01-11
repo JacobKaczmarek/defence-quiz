@@ -17,6 +17,7 @@ import { trpc } from '@/app/_trpc/client'
 import { useSession } from "next-auth/react"
 import { TCreateQuizDTO } from '@/server/quiz'
 import { useToast } from '@/components/ui/use-toast'
+import { useRouter } from 'next/navigation'
 
 
 export default function CreateQuizPage() {
@@ -27,6 +28,7 @@ export default function CreateQuizPage() {
     const [questions, setQuestions] = useState<(Question & { imageFile?: File, image?: string })[]>([])
     const createQuiz = trpc.quiz.create.useMutation()
     const { data: session } = useSession()
+    const router = useRouter()
     const { toast } = useToast()
 
 
@@ -64,8 +66,8 @@ export default function CreateQuizPage() {
         if (!questions || selectedQuestion === null) return
 
         const rect = e.currentTarget.getBoundingClientRect();
-        const x = (e.clientX - rect.left) / rect.width * 100;
-        const y = (e.clientY - rect.top) / rect.height * 100;
+        const x = +((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+        const y = +((e.clientY - rect.top) / rect.height * 100).toFixed(1);
 
         if (mode === 1) {
             const question = questions[selectedQuestion]
@@ -118,6 +120,7 @@ export default function CreateQuizPage() {
                         description: "Quiz został dodany",
                       })
                     setIsLoading(false)
+                    router.push('/quiz/list')
                 }
             })
     }
@@ -158,7 +161,7 @@ export default function CreateQuizPage() {
                     <Button variant={mode == 2 ? 'default' : 'secondary'} onClick={() => setMode(2)}>Wybierz pozycje obrońcy <Shield className='ml-2' /></Button>
                 </div>
 
-                <div className='relative w-full h-full max-h-[600px]'>
+                <div className='relative w-full pb-[56.25%]'>
                     {questions?.length && selectedQuestion !== null && selectedQuestion < questions.length ?
                         <Image
                             src={questions[selectedQuestion]?.image ?? ''}
