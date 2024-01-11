@@ -4,8 +4,8 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "platform-lookaside.fbsbx.com",
-      },
+        hostname: "wnnbkjlqmcphnpojtqkt.supabase.co"
+      }
     ],
   },
 };
