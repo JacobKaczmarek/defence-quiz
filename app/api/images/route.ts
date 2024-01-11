@@ -15,7 +15,7 @@ export const POST = async (req: Request) => {
         return NextResponse.json({ error }, { status: 500 });
     }
 
-    const { data: urlData } = supabase.storage.from('bando-academy').getPublicUrl(data.path);
+    const { data: urlData } = supabase.storage.from('savage-academy').getPublicUrl(data.path);
     if (!urlData) {
         return NextResponse.json(
             { message: 'Something went wrong while retrieving url of the image.' },
