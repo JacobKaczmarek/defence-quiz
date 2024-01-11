@@ -32,7 +32,40 @@ export const quizRouter = router({
 
     return quiz;
   }),
+  addSubmission: publicProcedure.input(z.object({ quizId: z.string(), userId: z.string(), score: z.number() })).mutation(async opts => {
+    const { quizId, userId, score } = opts.input
+
+    const submission = await db.submission.create({
+        data: {
+            quizId,
+            userId,
+            score
+        }
+    })
+
+    return submission
+  }),
   getAllQuizzes: publicProcedure.query(() => {
-    return db.quiz.findMany()
+    return db.quiz.findMany({ include: { questions: true, submissions: true }})
+  }),
+  getQuiz: publicProcedure.input(z.object({ quizId: z.string() })).query(async opts => {
+    const { quizId } = opts.input
+
+    const quiz = await db.quiz.findUnique({
+        where: { id: quizId },
+        include: { questions: true, submissions: { include: { user: true } } }
+    })
+
+    return quiz
+  }),
+  getSubmissions: publicProcedure.input(z.object({ quizId: z.string() })).query(async opts => {
+    const { quizId } = opts.input
+
+    const submissions = await db.submission.findMany({
+        where: { quizId },
+        include: { user: true }
+    })
+
+    return submissions
   })
 })
