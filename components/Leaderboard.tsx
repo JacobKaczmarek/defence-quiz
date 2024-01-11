@@ -1,30 +1,37 @@
+"use client"
+
 import { Trophy } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent } from "./ui/card";
+import { cn } from "@/lib/utils";
+import { Prisma } from "@prisma/client";
+import { useSession } from "next-auth/react";
 
 type Props = {
-    scores?: { name: string, score: number }[]
+    submissions?: Prisma.SubmissionGetPayload<{include: {user: true}}>[]
+    className?: string
 }
-export default function Leaderboard({ scores }: Props) {
+
+export default function Leaderboard({ submissions, className }: Props) {
+    const { data: session } = useSession()
+
     return (
-        <div>
-            <Card className="min-w-[250px]">
-                <CardHeader>
-                    <CardTitle><div className="flex">Leaderboard <Trophy className="ml-2 text-primary"/></div></CardTitle>
-                </CardHeader>
+        <Card className={cn(className, 'min-w-[300px]')}>
+            <CardHeader>
+                <CardTitle><div className="flex">Leaderboard <Trophy className="ml-2 text-primary"/></div></CardTitle>
+            </CardHeader>
 
-                <CardContent>
-                    {scores?.map((entry, i) => (
-                        <div className="my-2 flex items-center" key={entry.name}>
-                            <p className="mr-2">{i+1}.</p>
+            <CardContent>
+                {submissions?.toSorted((a, b) => a.score - b.score, ).map((submission, i) => (
+                    <div className="my-2 flex items-center" key={submission.id}>
+                        <p className="mr-2">{i+1}.</p>
 
-                            <div>
-                                <p className="text-sm font-medium leading-none">{entry.name}</p>
-                                <p className="text-sm text-muted-foreground">{entry.score}</p>
-                            </div>
+                        <div className={cn(submission.user.id === session?.user.id && 'text-primary', 'flex justify-between items-center flex-1')}>
+                            <p className="font-medium leading-none">{submission.user.name}</p>
+                            <p className="text-sm text-muted-foreground">{submission.score}</p>
                         </div>
-                    ))}
-                </CardContent>
-            </Card>
-        </div>
+                    </div>
+                ))}
+            </CardContent>
+        </Card>
     )
 }
