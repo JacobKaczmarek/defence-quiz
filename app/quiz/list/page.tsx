@@ -43,9 +43,9 @@ export default function QuizListPage() {
             <Separator className='my-5' />
 
             <div className="flex flex-1">
-                <div className='h-full overflow-scroll flex flex-col gap-3'>
+                <div className='h-full overflow-scroll flex flex-col gap-3 min-w-[300px]'>
                     {quizzes.data?.length === 0 ?
-                        <p>No quizzes found</p> :
+                        <p className='text-center mt-4'>Nie znaleziono quizów</p> :
                         quizzes.data?.map((quiz, i) => (
                             <QuizCard quiz={quiz as any} key={quiz.id} active={selectedQuiz === i} onClick={() => setSelectedQuiz(i)} />
                         ))

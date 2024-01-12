@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { LogIn, Shield } from 'lucide-react'
+import { Book, LogIn  } from 'lucide-react'
 import Link from "next/link";
 import Image from "next/image";
 import { getServerSession } from "next-auth";
@@ -16,7 +16,7 @@ export default async function Home() {
         <p className="mb-6 md:mb-12">To strona, na której możesz przetestować swoje umiejętności boiskowe w zakresie teoretycznym. Rozwiązuj quizy i rywalizuj z innymi zawodnikami z twojej drużyny</p>
 
         {session?.user ?
-          <Link href="/quiz/defence"><Button>Quiz Defensywny <Shield className="ml-2"/></Button></Link> :
+          <Link href="/quiz/list"><Button>Przejdź do quizów <Book className="ml-2"/></Button></Link> :
           <Link href="/api/auth/signin"><Button>Dołącz do gry <LogIn className="ml-2"/></Button></Link>
         }
       </div>

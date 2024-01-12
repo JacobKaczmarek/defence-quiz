@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { ModeToggle } from "./ModeToggle"
 import { Button } from "./ui/button"
-import { Book, User } from "lucide-react"
+import { Book, LogIn, LogOut, User } from "lucide-react"
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu"
@@ -19,7 +19,7 @@ export async function Navbar() {
 
 
       <div className="flex gap-1">
-        <Link href='/quiz/list'><Button variant="ghost">Quizy <Book className="ml-2"/></Button></Link>
+        { session?.user && <Link href='/quiz/list'><Button variant="ghost">Quizy <Book className="ml-2"/></Button></Link> }
         <ModeToggle />
         {session?.user ? (
           <div className="ml-2 flex items-center">
@@ -32,13 +32,26 @@ export async function Navbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
                 <DropdownMenuItem asChild>
-                  <Link href="/api/auth/signout">Wyloguj</Link>
+                  <Link href="/api/auth/signout"><LogOut className="mr-2" /> Wyloguj</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         ) : (
-          <Button variant="ghost"><User /></Button>
+          <div className="ml-2 flex items-center">
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost">
+                  <User className="ml-2"/>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuItem asChild>
+                  <Link href="/api/auth/signin"><LogIn className="mr-2" />Zaloguj</Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
         )
         }
       </div>
