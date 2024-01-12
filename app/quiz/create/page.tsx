@@ -66,8 +66,8 @@ export default function CreateQuizPage() {
         if (!questions || selectedQuestion === null) return
 
         const rect = e.currentTarget.getBoundingClientRect();
-        const x = +((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-        const y = +((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+        const x = +((e.clientX - rect.left) / rect.width * 100).toFixed(2);
+        const y = +((e.clientY - rect.top) / rect.height * 100).toFixed(2);
 
         if (mode === 1) {
             const question = questions[selectedQuestion]

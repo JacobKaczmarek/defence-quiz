@@ -2,7 +2,7 @@ import React from 'react'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 import { cn } from '@/lib/utils'
 import { Prisma } from '@prisma/client'
-import { HelpCircle, UserCheck } from 'lucide-react'
+import { Crown, HelpCircle, UserCheck } from 'lucide-react'
 
 type Props = {
     quiz: Prisma.QuizGetPayload<{include: { submissions : true, questions: true }}>
@@ -38,8 +38,8 @@ export default function QuizCard({ quiz, className, active = false, onClick }: P
             </CardDescription>
         </CardHeader>
         
-        <CardContent className='p-4 pt-2'>
-            {quiz.submissions.length !== 0 ? <p>{getHighestScore()}</p> : <p>Brak wyników</p>}
+        <CardContent className='p-4 pt-2 w-fit ml-auto'>
+            {quiz.submissions.length !== 0 ? <span className='flex font-semibold'><Crown className='mr-2' />{getHighestScore()}</span> : <p>Brak wyników</p>}
         </CardContent>
     </Card>
   )

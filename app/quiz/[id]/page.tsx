@@ -5,10 +5,11 @@ import Image from "next/image";
 import { useState } from "react";
 import Marker from "@/components/Marker";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Check, ChevronRight } from "lucide-react";
+import { ArrowLeft, Check, ChevronRight, Loader } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Leaderboard from "@/components/Leaderboard";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 
 export default function QuizPage({ params }: { params: { id: string } }) {
@@ -16,6 +17,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
     const [questionNumber, setQuestionNumber] = useState<number>(0)
     const [score, setScore] = useState<number>()
     const [total, setTotal] = useState<number>(0)
+    const [imageLoaded, setImageLoaded] = useState(false)
     const { data: session } = useSession()
 
     const quiz = trpc.quiz.getQuiz.useQuery({ quizId: params.id })
@@ -29,8 +31,9 @@ export default function QuizPage({ params }: { params: { id: string } }) {
         if (score !== undefined) return
 
         const rect = e.currentTarget.getBoundingClientRect();
-        const x = +((e.clientX - rect.left) / rect.width * 100).toFixed(1);
-        const y = +((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+        const x = +((e.clientX - rect.left) / rect.width * 100).toFixed(2);
+        const y = +((e.clientY - rect.top) / rect.height * 100).toFixed(2);
+
         setPosition([x, y]);
     }
 
@@ -57,7 +60,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
             setPosition(undefined)
         }
         setQuestionNumber(questionNumber + 1)
-
+        setImageLoaded(false)
     }
 
     const save = async () => {
@@ -66,7 +69,7 @@ export default function QuizPage({ params }: { params: { id: string } }) {
         submissionMutation.mutate({
             userId: session?.user?.id,
             quizId: params.id,
-            score: total + (score ?? 0),
+            score: +(total + (score ?? 0)).toFixed(2),
         })
     }
 
@@ -85,8 +88,16 @@ export default function QuizPage({ params }: { params: { id: string } }) {
                 ) :
                 <div>
                     <div className="w-full pb-[56.25%] relative">
-                        <Image src={quiz.data.questions[questionNumber].imageUrl} fill className='object-contain' alt='img' onClick={handleImageClick} />
-                        <Marker position={[quiz.data.questions[questionNumber].offensiveX, quiz.data.questions[questionNumber].offensiveY]} color='primary' />
+                        <Image 
+                            src={quiz.data.questions[questionNumber].imageUrl}
+                            fill
+                            className={cn('object-contain', { 'opacity-0': !imageLoaded })}
+                            alt='img'
+                            onClick={handleImageClick}
+                            onLoadingComplete={() => setImageLoaded(true)}
+                        />
+                        { !imageLoaded && <Loader className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'/>}
+                        { imageLoaded && <Marker position={[quiz.data.questions[questionNumber].offensiveX, quiz.data.questions[questionNumber].offensiveY]} color='primary' /> }
                         { position && <Marker position={position as [number, number]} color='secondary' /> }
                         { score !== undefined && <Marker position={[quiz.data.questions[questionNumber].defensiveX, quiz.data.questions[questionNumber].defensiveY]} color='tertiary' /> }
                     </div>
