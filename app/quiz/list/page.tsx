@@ -19,7 +19,7 @@ export default function QuizListPage() {
     const { data: session } = useSession()
 
     const quizzes = trpc.quiz.getAllQuizzes.useQuery()
-    const submissions = trpc.quiz.getSubmissions.useQuery({ quizId: quizzes.data && selectedQuiz ? quizzes.data[selectedQuiz].id : ''}, {
+    const submissions = trpc.quiz.getSubmissions.useQuery({ quizId: quizzes.data && selectedQuiz !== null ? quizzes.data[selectedQuiz].id : ''}, {
         enabled: selectedQuiz !== null && quizzes.data !== undefined,
     } )
 
