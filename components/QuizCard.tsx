@@ -12,13 +12,14 @@ type Props = {
 }
 
 export default function QuizCard({ quiz, className, active = false, onClick }: Props) {
-    const getHighestScore = () => {
-        let highestScore = 0
+    const getLowestScore = () => {
+        let lowestScore = Infinity
+
         quiz.submissions.forEach(submission => {
-            if (submission.score > highestScore) highestScore = submission.score
+            if (submission.score < lowestScore) lowestScore = submission.score
         })
 
-        return highestScore
+        return lowestScore
     }
 
   return (
@@ -39,7 +40,7 @@ export default function QuizCard({ quiz, className, active = false, onClick }: P
         </CardHeader>
         
         <CardContent className='p-4 pt-2 w-fit ml-auto'>
-            {quiz.submissions.length !== 0 ? <span className='flex font-semibold'><Crown className='mr-2' />{getHighestScore()}</span> : <p>Brak wyników</p>}
+            {quiz.submissions.length !== 0 ? <span className='flex font-semibold'><Crown className='mr-2' />{getLowestScore()}</span> : <p>Brak wyników</p>}
         </CardContent>
     </Card>
   )

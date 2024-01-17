@@ -108,7 +108,7 @@ export default function CreateQuizPage() {
         tmpQuestions = tmpQuestions.map((question) => ({
             imageUrl: question.imageUrl,
             offensiveX: question.offensiveX,
-            offensiveY: question.defensiveY,
+            offensiveY: question.offensiveY,
             defensiveX: question.defensiveX,
             defensiveY: question.defensiveY,
         } as Question))
@@ -178,7 +178,8 @@ export default function CreateQuizPage() {
 
                     {selectedQuestion !== null &&
                         selectedQuestion < questions.length &&
-                        questions[selectedQuestion].offensiveX != null && questions[selectedQuestion].offensiveY != null &&
+                        questions[selectedQuestion].offensiveX != null &&
+                        questions[selectedQuestion].offensiveY != null &&
                         <Marker position={[questions[selectedQuestion].offensiveX as number, questions[selectedQuestion].offensiveY as number]} color='primary' />
                     }
 
